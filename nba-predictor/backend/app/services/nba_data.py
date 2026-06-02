@@ -135,7 +135,7 @@ def get_standings(season: str = "2025-26") -> Optional[Dict]:
             season=season,
             season_type="Regular Season",
             headers=CUSTOM_HEADERS,
-            timeout=60
+            timeout=10
         )
 
         df = standings.get_data_frames()[0]
@@ -309,7 +309,7 @@ def get_team_stats(team_id: int, season: str = "2025-26") -> Optional[Dict]:
             season_type_all_star="Regular Season",
             per_mode_detailed="PerGame",
             headers=CUSTOM_HEADERS,
-            timeout=60
+            timeout=10
         )
 
         df = stats.get_data_frames()[0]
@@ -366,7 +366,7 @@ def get_team_game_log(team_id: int, season: str = "2025-26") -> List[Dict]:
             season=season,
             season_type_all_star="Regular Season",
             headers=CUSTOM_HEADERS,
-            timeout=60
+            timeout=10
         )
 
         df = log.get_data_frames()[0]
@@ -648,7 +648,7 @@ def _fetch_team_game_log(team_id: int, season: str, season_type: str = "Playoffs
             season=season,
             season_type_all_star=season_type,
             headers=CUSTOM_HEADERS,
-            timeout=60
+            timeout=10
         )
         df = log.get_data_frames()[0]
         if not df.empty:
@@ -750,7 +750,7 @@ def get_scoreboard(date: str = None) -> Dict:
         scoreboard = scoreboardv2.ScoreboardV2(
             game_date=nba_date,
             headers=CUSTOM_HEADERS,
-            timeout=60
+            timeout=10
         )
 
         # Get game header data
