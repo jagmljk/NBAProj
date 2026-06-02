@@ -1,0 +1,33 @@
+{
+  "xgboost_weight": 0.5999999999999999,
+  "lightgbm_weight": 0.40000000000000013,
+  "feature_names": [
+    "IS_HOME",
+    "WIN_PCT_DIFF_10",
+    "WIN_PCT_DIFF_5",
+    "NET_RATING_DIFF_10",
+    "NET_RATING_DIFF_5",
+    "OFF_RATING_DIFF_10",
+    "OFF_RATING_DIFF_5",
+    "DEF_RATING_DIFF_10",
+    "DEF_RATING_DIFF_5",
+    "EFG_PCT_DIFF_10",
+    "EFG_PCT_DIFF_5",
+    "TOV_PCT_DIFF_10",
+    "TOV_PCT_DIFF_5",
+    "FTR_DIFF_10",
+    "FTR_DIFF_5",
+    "OREB_DIFF_10",
+    "OREB_DIFF_5",
+    "HOME_WIN_PCT_10",
+    "HOME_NET_RATING_10",
+    "AWAY_WIN_PCT_10",
+    "AWAY_NET_RATING_10"
+  ],
+  "metrics": {
+    "xgboost_test_accuracy": 0.6446028513238289,
+    "lightgbm_test_accuracy": 0.6470468431771894,
+    "ensemble_test_accuracy": 0.6462321792260692,
+    "ensemble_test_auc": 0.7018819400948229
+  }
+}
