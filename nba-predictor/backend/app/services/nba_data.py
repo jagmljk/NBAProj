@@ -20,7 +20,7 @@ import pandas as pd
 
 from app.services.fallback_data import get_fallback_standings, get_fallback_scoreboard
 
-# Configure NBA API to use browser-like headers (fixes cloud deployment blocks)
+# Configure NBA API to use browser-like headers
 CUSTOM_HEADERS = {
     'Host': 'stats.nba.com',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0',
