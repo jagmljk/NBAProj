@@ -357,11 +357,10 @@ function CalibrationCurve() {
   const { data, isLoading } = useModelCalibration();
 
   const calibrationBins = data?.bins ?? [];
-  const brierScore = data?.brier_score ?? 0;
   const calibrationError = data?.calibration_error ?? 0;
 
   // Transform data for the chart
-  const chartData = calibrationBins.map((point, index) => ({
+  const chartData = calibrationBins.map((point) => ({
     predicted: point.predicted_prob * 100,
     actual: point.actual_rate * 100,
     count: point.count,

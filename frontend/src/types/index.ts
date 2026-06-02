@@ -229,6 +229,7 @@ export interface ModelPerformance {
   test_f1?: number;
   val_brier?: number;
   val_log_loss?: number;
+  total_games?: number;
 }
 
 export interface FeatureImportance {
