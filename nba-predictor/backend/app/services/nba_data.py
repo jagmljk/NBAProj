@@ -18,6 +18,8 @@ from nba_api.stats.endpoints import (
 from nba_api.stats.library.http import NBAStatsHTTP
 import pandas as pd
 
+from app.services.fallback_data import get_fallback_standings, get_fallback_scoreboard
+
 # Configure NBA API to use browser-like headers (fixes cloud deployment blocks)
 CUSTOM_HEADERS = {
     'Host': 'stats.nba.com',
@@ -198,10 +200,17 @@ def get_standings(season: str = "2025-26") -> Optional[Dict]:
         return result
 
     except Exception as e:
-        print(f"Error fetching standings: {e}")
-        import traceback
-        traceback.print_exc()
-        return None
+        print(f"Error fetching standings: {e}, using fallback data")
+        fallback = get_fallback_standings()
+        return {
+            "eastern": fallback["eastern"],
+            "western": fallback["western"],
+            "season": season,
+            "as_of_date": datetime.now().strftime("%Y-%m-%d"),
+            "playoff_info": {"playin_start": 7, "playin_end": 10, "playoff_cutoff": 6, "playin_cutoff": 10},
+            "last_updated": datetime.now().isoformat(),
+            "is_fallback": True
+        }
 
 
 def get_static_standings(season: str = "2025-26") -> Dict:
@@ -853,16 +862,7 @@ def get_scoreboard(date: str = None) -> Dict:
         return result
 
     except Exception as e:
-        print(f"Error fetching scoreboard: {e}")
-        import traceback
-        traceback.print_exc()
+        print(f"Error fetching scoreboard: {e}, returning fallback")
 
-        # Return empty scoreboard on error
-        return {
-            "date": date,
-            "games": [],
-            "games_in_progress": 0,
-            "games_completed": 0,
-            "games_scheduled": 0,
-            "last_updated": datetime.now().isoformat(),
-        }
+        # Return fallback scoreboard on error
+        return get_fallback_scoreboard(date)
