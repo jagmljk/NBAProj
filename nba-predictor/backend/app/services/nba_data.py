@@ -4,6 +4,7 @@ Clean, simple implementation with fallback to static data.
 """
 
 import time
+import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 from nba_api.stats.static import teams as static_teams
@@ -14,7 +15,24 @@ from nba_api.stats.endpoints import (
     teamdashboardbygeneralsplits,
     scoreboardv2,
 )
+from nba_api.stats.library.http import NBAStatsHTTP
 import pandas as pd
+
+# Configure NBA API to use browser-like headers (fixes cloud deployment blocks)
+CUSTOM_HEADERS = {
+    'Host': 'stats.nba.com',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0',
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'x-nba-stats-origin': 'stats',
+    'x-nba-stats-token': 'true',
+    'Connection': 'keep-alive',
+    'Referer': 'https://stats.nba.com/',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-origin',
+}
 
 
 # Team ID to abbreviation mapping cache
@@ -113,7 +131,9 @@ def get_standings(season: str = "2025-26") -> Optional[Dict]:
 
         standings = leaguestandingsv3.LeagueStandingsV3(
             season=season,
-            season_type="Regular Season"
+            season_type="Regular Season",
+            headers=CUSTOM_HEADERS,
+            timeout=60
         )
 
         df = standings.get_data_frames()[0]
@@ -279,6 +299,8 @@ def get_team_stats(team_id: int, season: str = "2025-26") -> Optional[Dict]:
             season=season,
             season_type_all_star="Regular Season",
             per_mode_detailed="PerGame",
+            headers=CUSTOM_HEADERS,
+            timeout=60
         )
 
         df = stats.get_data_frames()[0]
@@ -334,6 +356,8 @@ def get_team_game_log(team_id: int, season: str = "2025-26") -> List[Dict]:
             team_id=team_id,
             season=season,
             season_type_all_star="Regular Season",
+            headers=CUSTOM_HEADERS,
+            timeout=60
         )
 
         df = log.get_data_frames()[0]
@@ -614,6 +638,8 @@ def _fetch_team_game_log(team_id: int, season: str, season_type: str = "Playoffs
             team_id=team_id,
             season=season,
             season_type_all_star=season_type,
+            headers=CUSTOM_HEADERS,
+            timeout=60
         )
         df = log.get_data_frames()[0]
         if not df.empty:
@@ -712,7 +738,11 @@ def get_scoreboard(date: str = None) -> Dict:
         date_obj = datetime.strptime(date, "%Y-%m-%d")
         nba_date = date_obj.strftime("%m/%d/%Y")
 
-        scoreboard = scoreboardv2.ScoreboardV2(game_date=nba_date)
+        scoreboard = scoreboardv2.ScoreboardV2(
+            game_date=nba_date,
+            headers=CUSTOM_HEADERS,
+            timeout=60
+        )
 
         # Get game header data
         game_header = scoreboard.game_header.get_data_frame()
